@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.env
+__pycache__/
+
+# AI/ML
+ml/data/raw/
+ml/data/feedback.csv

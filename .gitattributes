@@ -1,0 +1,6 @@
+# Force GitHub to treat all template files as documentation rather than code
+templates/** linguist-documentation
+static/** linguist-documentation
+
+# Explicitly ensure your main engine counts as the primary language
+app.py linguist-language=Python

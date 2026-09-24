@@ -1,0 +1,369 @@
+{
+  "model_name": "Gradient Boosting",
+  "trained_at": "24-09-2026 14:50",
+  "dataset": {
+    "total": 355128,
+    "phishing": 155137,
+    "legitimate": 199991,
+    "train": 303119,
+    "test": 52009,
+    "sources": {
+      "faizann": 235644,
+      "phishing_db": 119484
+    },
+    "split": "grouped by registered domain"
+  },
+  "n_features": 46,
+  "test": {
+    "accuracy": 0.9286,
+    "precision": 0.9285,
+    "recall": 0.9172,
+    "f1": 0.9228,
+    "roc_auc": 0.9832
+  },
+  "confusion": {
+    "tn": 26104,
+    "fp": 1708,
+    "fn": 2004,
+    "tp": 22193
+  },
+  "roc": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0676
+    ],
+    [
+      0.0,
+      0.1291
+    ],
+    [
+      0.0,
+      0.1811
+    ],
+    [
+      0.0,
+      0.2363
+    ],
+    [
+      0.0,
+      0.2909
+    ],
+    [
+      0.0001,
+      0.3536
+    ],
+    [
+      0.0001,
+      0.4104
+    ],
+    [
+      0.0003,
+      0.4875
+    ],
+    [
+      0.0005,
+      0.5701
+    ],
+    [
+      0.0011,
+      0.6332
+    ],
+    [
+      0.0021,
+      0.693
+    ],
+    [
+      0.0043,
+      0.7387
+    ],
+    [
+      0.0067,
+      0.7691
+    ],
+    [
+      0.0096,
+      0.7936
+    ],
+    [
+      0.0129,
+      0.813
+    ],
+    [
+      0.0159,
+      0.8325
+    ],
+    [
+      0.0201,
+      0.8484
+    ],
+    [
+      0.0242,
+      0.8609
+    ],
+    [
+      0.0292,
+      0.8717
+    ],
+    [
+      0.0343,
+      0.881
+    ],
+    [
+      0.0405,
+      0.8887
+    ],
+    [
+      0.0462,
+      0.8971
+    ],
+    [
+      0.0523,
+      0.9066
+    ],
+    [
+      0.0595,
+      0.9154
+    ],
+    [
+      0.0659,
+      0.9224
+    ],
+    [
+      0.0715,
+      0.929
+    ],
+    [
+      0.0777,
+      0.9356
+    ],
+    [
+      0.0845,
+      0.9422
+    ],
+    [
+      0.0914,
+      0.9481
+    ],
+    [
+      0.0997,
+      0.9532
+    ],
+    [
+      0.1124,
+      0.9601
+    ],
+    [
+      0.1246,
+      0.9645
+    ],
+    [
+      0.1439,
+      0.9702
+    ],
+    [
+      0.164,
+      0.9749
+    ],
+    [
+      0.1864,
+      0.9787
+    ],
+    [
+      0.2047,
+      0.9821
+    ],
+    [
+      0.2301,
+      0.9848
+    ],
+    [
+      0.2524,
+      0.9874
+    ],
+    [
+      0.2742,
+      0.99
+    ],
+    [
+      0.2971,
+      0.992
+    ],
+    [
+      0.3271,
+      0.9933
+    ],
+    [
+      0.3621,
+      0.9948
+    ],
+    [
+      0.3977,
+      0.9962
+    ],
+    [
+      0.4326,
+      0.9969
+    ],
+    [
+      0.4745,
+      0.9973
+    ],
+    [
+      0.5166,
+      0.9983
+    ],
+    [
+      0.5498,
+      0.999
+    ],
+    [
+      0.5833,
+      0.9993
+    ],
+    [
+      0.6171,
+      0.9996
+    ],
+    [
+      0.6539,
+      0.9998
+    ],
+    [
+      0.6925,
+      0.9998
+    ],
+    [
+      0.7236,
+      0.9999
+    ],
+    [
+      0.7582,
+      0.9999
+    ],
+    [
+      0.7969,
+      0.9999
+    ],
+    [
+      0.8365,
+      1.0
+    ],
+    [
+      0.8684,
+      1.0
+    ],
+    [
+      0.9167,
+      1.0
+    ],
+    [
+      0.9532,
+      1.0
+    ],
+    [
+      1.0,
+      1.0
+    ]
+  ],
+  "importances": [
+    {
+      "feature": "domain_rank_log",
+      "label": "Domain popularity rank (log10)",
+      "importance": 0.02048
+    },
+    {
+      "feature": "suspicious_words",
+      "label": "Phishing keywords in URL",
+      "importance": 0.01318
+    },
+    {
+      "feature": "in_top_domains",
+      "label": "Domain in popular-sites list",
+      "importance": 0.01314
+    },
+    {
+      "feature": "num_digits_url",
+      "label": "Digits in URL",
+      "importance": 0.01266
+    },
+    {
+      "feature": "suspicious_tld",
+      "label": "Suspicious TLD",
+      "importance": 0.01252
+    },
+    {
+      "feature": "max_digit_run",
+      "label": "Longest run of digits",
+      "importance": 0.01106
+    },
+    {
+      "feature": "host_length",
+      "label": "Hostname length",
+      "importance": 0.00928
+    },
+    {
+      "feature": "num_hyphens_url",
+      "label": "Hyphens in URL",
+      "importance": 0.00886
+    },
+    {
+      "feature": "tld_length",
+      "label": "TLD length",
+      "importance": 0.00842
+    },
+    {
+      "feature": "brand_mismatch",
+      "label": "Brand name outside real domain",
+      "importance": 0.00806
+    },
+    {
+      "feature": "longest_token",
+      "label": "Longest alphanumeric token",
+      "importance": 0.00801
+    },
+    {
+      "feature": "num_underscores",
+      "label": "Underscores in URL",
+      "importance": 0.00584
+    }
+  ],
+  "per_source": {
+    "faizann": {
+      "rows": 32976,
+      "accuracy": 0.9269,
+      "phishing_recall": 0.8641
+    },
+    "phishing_db": {
+      "rows": 19033,
+      "accuracy": 0.9316,
+      "phishing_recall": 0.9316
+    }
+  },
+  "comparison": [
+    {
+      "name": "Logistic Regression",
+      "accuracy": 0.878,
+      "f1": 0.8625,
+      "roc_auc": 0.9561,
+      "selected": false
+    },
+    {
+      "name": "Random Forest",
+      "accuracy": 0.9279,
+      "f1": 0.9226,
+      "roc_auc": 0.9809,
+      "selected": false
+    },
+    {
+      "name": "Gradient Boosting",
+      "accuracy": 0.9294,
+      "f1": 0.9235,
+      "roc_auc": 0.9836,
+      "selected": true
+    }
+  ]
+}

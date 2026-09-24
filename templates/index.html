@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard | Security Intelligence</title>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="header">
+
+        <div class="brand">
+            <div class="pg-logo">PG</div>
+
+            <div>
+                <h1>PhishGuard</h1>
+                <p>Security Intelligence</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="theme-btn" onclick="toggleTheme()">◐</button>
+            <div class="profile">PG</div>
+        </div>
+
+    </header>
+
+    <nav class="navigation">
+
+        <a href="#" class="nav-link active">Overview</a>
+        <a href="#scanner" class="nav-link">URL Scanner</a>
+        <a href="#history" class="nav-link">Scan History</a>
+        <a href="#methodology" class="nav-link">Methodology</a>
+        <a href="#ai-engine" class="nav-link">AI Engine</a>
+
+        <button class="nav-theme" onclick="toggleTheme()">
+            ◐ Change Theme
+        </button>
+
+    </nav>
+
+    <main class="content">
+
+        <section class="hero">
+
+            <div class="hero-logo">PG</div>
+
+            <h2>Website Security Scanner</h2>
+
+            <p>
+                Analyze website URLs and check their security reputation
+                using VirusTotal intelligence.
+            </p>
+
+        </section>
+
+        <section class="overview">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">#</div>
+
+                <span class="stat-label">
+                    TOTAL INSPECTIONS
+                </span>
+
+                <strong class="stat-value">
+                    {{ statistics.total_scans }}
+                </strong>
+
+                <small>
+                    Current server session
+                </small>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">!</div>
+
+                <span class="stat-label">
+                    THREAT FLAGS
+                </span>
+
+                <strong class="stat-value">
+                    {{ statistics.phishing_scans }}
+                </strong>
+
+                <small>
+                    Malicious or suspicious results
+                </small>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">✓</div>
+
+                <span class="stat-label">
+                    NO DETECTION RESULTS
+                </span>
+
+                <strong class="stat-value">
+                    {{ statistics.legitimate_scans }}
+                </strong>
+
+                <small>
+                    Not a guarantee of safety
+                </small>
+
+            </div>
+
+        </section>
+
+        <section class="scanner" id="scanner">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="eyebrow">
+                        VIRUSTOTAL API V3
+                    </span>
+
+                    <h2>URL Security Scanner</h2>
+
+                    <p>
+                        Submit a complete website address for analysis.
+                    </p>
+                </div>
+
+            </div>
+
+            <form method="POST" id="scanForm">
+
+                <div class="url-box">
+
+                    <input
+                        class="url-input"
+                        type="url"
+                        id="url"
+                        name="url"
+                        value="{{ scanned_url }}"
+                        placeholder="https://example.com"
+                        required
+                    >
+
+                    <button class="scan-btn" type="submit">
+                        Analyze URL →
+                    </button>
+
+                </div>
+
+            </form>
+
+            <div class="tools">
+
+                <div class="examples">
+
+                    <span>Examples</span>
+
+                    <button
+                        class="tool-btn"
+                        onclick="setURL('https://google.com')">
+                        Google
+                    </button>
+
+                    <button
+                        class="tool-btn"
+                        onclick="setURL('https://github.com')">
+                        GitHub
+                    </button>
+
+                    <button
+                        class="tool-btn"
+                        onclick="setURL('https://example.com')">
+                        Example
+                    </button>
+
+                </div>
+
+                <div class="tools-right">
+
+                    <button class="tool-btn" onclick="pasteURL()">
+                        Paste
+                    </button>
+
+                    <button class="tool-btn" onclick="copyURL()">
+                        Copy
+                    </button>
+
+                    <button class="tool-btn" onclick="clearURL()">
+                        Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="scan-status" id="scanStatus">
+
+                <span class="loader"></span>
+
+                Analyzing the URL. Please wait for the results...
+
+            </div>
+
+        </section>
+
+        {% if result %}
+
+        <section class="result {{ result.style }}">
+
+            <div class="result-top">
+
+                <div>
+
+                    <span class="result-label">
+                        ANALYSIS RESULT
+                    </span>
+
+                    <h2>{{ result.label }}</h2>
+
+                    <p>
+                        Analysis completed using VirusTotal
+                        security intelligence.
+                    </p>
+
+                </div>
+
+                <div class="risk">
+                    {{ result.risk_level }}
+                </div>
+
+            </div>
+
+            <div class="result-message">
+                {{ result.message }}
+            </div>
+
+            <div class="metrics">
+
+                <div class="metric red">
+                    <strong>{{ result.malicious }}</strong>
+                    <span>Malicious</span>
+                </div>
+
+                <div class="metric orange">
+                    <strong>{{ result.suspicious }}</strong>
+                    <span>Suspicious</span>
+                </div>
+
+                <div class="metric green">
+                    <strong>{{ result.harmless }}</strong>
+                    <span>Harmless</span>
+                </div>
+
+                <div class="metric blue">
+                    <strong>{{ result.undetected }}</strong>
+                    <span>Undetected</span>
+                </div>
+
+            </div>
+
+            <div class="detection">
+
+                <div class="detection-heading">
+
+                    <span>
+                        Combined detection rate
+                    </span>
+
+                    <strong>
+                        {{ result.detection_rate }}%
+                    </strong>
+
+                </div>
+
+                <div class="progress">
+
+                    <div
+                        class="progress-fill"
+                        id="detectionBar"
+                        data-rate="{{ result.detection_rate }}">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="result-footer">
+
+                <span>
+                    Total engines:
+                    <strong>{{ result.total }}</strong>
+                </span>
+
+                <span>
+                    Method:
+                    <strong>{{ result.method }}</strong>
+                </span>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+        {% if ml and not ml.available %}
+
+        <section class="result warning ai-result">
+            <span class="result-label">AI / ML ANALYSIS</span>
+            <h2>AI engine unavailable</h2>
+            <div class="result-message">{{ ml.message }}</div>
+        </section>
+
+        {% elif ml and combined %}
+
+        <section class="result ai-result {{ combined.style }}" id="aiResult">
+
+            <div class="result-top">
+
+                <div>
+
+                    <span class="result-label">
+                        AI / ML ANALYSIS &middot; HYBRID VERDICT
+                    </span>
+
+                    <h2>{{ combined.label }}</h2>
+
+                    <p>
+                        Combined from: {{ combined.sources }}
+                    </p>
+
+                </div>
+
+                <div class="risk {{ combined.style }}">
+                    {{ combined.risk_level }}
+                </div>
+
+            </div>
+
+            <div class="result-message">
+                {{ combined.note }}
+            </div>
+
+            <div class="metrics three">
+
+                <div class="metric {{ 'red' if combined.style == 'danger' else 'orange' if combined.style == 'warning' else 'green' }}">
+                    <strong>{{ combined.score }}%</strong>
+                    <span>Hybrid risk score</span>
+                </div>
+
+                <div class="metric {{ 'red' if ml.style == 'danger' else 'orange' if ml.style == 'warning' else 'green' }}">
+                    <strong>{{ ml.phishing_probability }}%</strong>
+                    <span>AI phishing probability</span>
+                </div>
+
+                <div class="metric blue">
+                    <strong>{{ ml.confidence }}%</strong>
+                    <span>Model confidence</span>
+                </div>
+
+            </div>
+
+            <div class="detection">
+
+                <div class="detection-heading">
+                    <span>AI phishing probability</span>
+                    <strong>{{ ml.phishing_probability }}%</strong>
+                </div>
+
+                <div class="progress">
+                    <div
+                        class="progress-fill ai-bar"
+                        data-rate="{{ ml.phishing_probability }}">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="why">
+
+                <h3 class="why-title">Why did the AI decide this?</h3>
+
+                <div class="factors-grid">
+
+                    <div class="factor-col">
+
+                        <span class="factor-heading danger">Risk signals</span>
+
+                        {% for f in ml.factors.risk %}
+                        <div class="factor">
+                            <div class="factor-top">
+                                <span>{{ f.label }}</span>
+                                <em>{{ f.value }} &middot; {{ f.strength }}</em>
+                            </div>
+                            <div class="factor-bar">
+                                <div class="factor-fill danger" style="width: {{ f.width }}%"></div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="empty">No notable risk signals.</p>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="factor-col">
+
+                        <span class="factor-heading safe">Reassuring signals</span>
+
+                        {% for f in ml.factors.reassuring %}
+                        <div class="factor">
+                            <div class="factor-top">
+                                <span>{{ f.label }}</span>
+                                <em>{{ f.value }} &middot; {{ f.strength }}</em>
+                            </div>
+                            <div class="factor-bar">
+                                <div class="factor-fill safe" style="width: {{ f.width }}%"></div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="empty">No notable reassuring signals.</p>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div
+                class="feedback"
+                id="aiFeedback"
+                data-url="{{ ml.url }}"
+                data-prob="{{ ml.phishing_probability }}">
+
+                <span>Help improve the model:</span>
+
+                <button class="tool-btn" onclick="sendFeedback('legitimate')">
+                    This URL is legitimate
+                </button>
+
+                <button class="tool-btn" onclick="sendFeedback('phishing')">
+                    This URL is phishing
+                </button>
+
+                <small id="feedbackMsg"></small>
+
+            </div>
+
+            <div class="result-footer">
+
+                <span>
+                    Model:
+                    <strong>{{ ml.model_name }}</strong>
+                </span>
+
+                <span>
+                    Method:
+                    <strong>Machine learning on URL structure</strong>
+                </span>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+        <section class="lower-grid">
+
+            <div class="panel" id="methodology">
+
+                <span class="panel-label">
+                    PROCESS
+                </span>
+
+                <h2>Analysis Methodology</h2>
+
+                <div class="method">
+
+                    <div class="method-number">01</div>
+
+                    <div>
+                        <h3>URL Submission</h3>
+
+                        <p>
+                            The website address is submitted
+                            to the VirusTotal API.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="method">
+
+                    <div class="method-number">02</div>
+
+                    <div>
+                        <h3>Security Engine Analysis</h3>
+
+                        <p>
+                            Available security engines analyze
+                            the submitted URL.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="method">
+
+                    <div class="method-number">03</div>
+
+                    <div>
+                        <h3>Detection Aggregation</h3>
+
+                        <p>
+                            Malicious, suspicious, harmless and
+                            undetected counts are collected.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="method">
+
+                    <div class="method-number">04</div>
+
+                    <div>
+                        <h3>Risk Interpretation</h3>
+
+                        <p>
+                            The dashboard displays a simple
+                            risk summary based on returned results.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="panel" id="history">
+
+                <span class="panel-label">
+                    ACTIVITY
+                </span>
+
+                <h2>Recent Scan History</h2>
+
+                <input
+                    class="history-search"
+                    id="historySearch"
+                    type="search"
+                    placeholder="Search URLs..."
+                    oninput="filterHistory()"
+                >
+
+                <div id="historyList">
+
+                    {% if history %}
+
+                        {% for item in history %}
+
+                        <div
+                            class="history-item"
+                            data-url="{{ item.url|lower }}"
+                        >
+
+                            <div class="history-url">
+                                {{ item.url }}
+                            </div>
+
+                            <div class="history-info">
+
+                                <span class="history-tag">
+                                    {{ item.label }}
+                                </span>
+
+                                <span>
+                                    {{ item.risk_level }}
+                                </span>
+
+                                <span>
+                                    {{ item.detection_rate }}%
+                                </span>
+
+                                {% if item.ai_score is not none %}
+                                <span class="history-ai">
+                                    AI: {{ item.ai_verdict }} ({{ item.ai_score }}%)
+                                </span>
+                                {% endif %}
+
+                                <span>
+                                    {{ item.time }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                        <a
+                            href="{{ url_for('clear_history') }}"
+                            class="clear-btn">
+                            Clear History
+                        </a>
+
+                    {% else %}
+
+                        <p class="empty">
+                            No scans have been performed yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="lower-grid ai-engine" id="ai-engine">
+
+            <div class="panel">
+
+                <span class="panel-label">
+                    MACHINE LEARNING
+                </span>
+
+                <h2>Model Performance</h2>
+
+                {% if model_info %}
+
+                <p class="ai-note">
+                    {{ model_info.model_name }} trained on
+                    {{ "{:,}".format(model_info.dataset.total) }} labelled URLs
+                    ({{ "{:,}".format(model_info.dataset.phishing) }} phishing,
+                    {{ "{:,}".format(model_info.dataset.legitimate) }} legitimate).
+                    Scores below are measured on
+                    {{ "{:,}".format(model_info.dataset.test) }} URLs from
+                    domains the model never saw during training.
+                </p>
+
+                <div class="metrics">
+
+                    <div class="metric green">
+                        <strong>{{ (model_info.test.accuracy * 100)|round(1) }}%</strong>
+                        <span>Accuracy</span>
+                    </div>
+
+                    <div class="metric blue">
+                        <strong>{{ (model_info.test.precision * 100)|round(1) }}%</strong>
+                        <span>Precision</span>
+                    </div>
+
+                    <div class="metric orange">
+                        <strong>{{ (model_info.test.recall * 100)|round(1) }}%</strong>
+                        <span>Recall</span>
+                    </div>
+
+                    <div class="metric red">
+                        <strong>{{ (model_info.test.f1 * 100)|round(1) }}%</strong>
+                        <span>F1 score</span>
+                    </div>
+
+                </div>
+
+                <div class="ai-two">
+
+                    <div>
+
+                        <h3 class="ai-sub">Confusion matrix</h3>
+
+                        <div class="confusion">
+                            <div class="cm-cell good">
+                                <strong>{{ "{:,}".format(model_info.confusion.tn) }}</strong>
+                                <span>Legitimate<br>correctly kept</span>
+                            </div>
+                            <div class="cm-cell bad">
+                                <strong>{{ "{:,}".format(model_info.confusion.fp) }}</strong>
+                                <span>Legitimate<br>flagged</span>
+                            </div>
+                            <div class="cm-cell bad">
+                                <strong>{{ "{:,}".format(model_info.confusion.fn) }}</strong>
+                                <span>Phishing<br>missed</span>
+                            </div>
+                            <div class="cm-cell good">
+                                <strong>{{ "{:,}".format(model_info.confusion.tp) }}</strong>
+                                <span>Phishing<br>caught</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <h3 class="ai-sub">
+                            ROC curve (AUC {{ model_info.test.roc_auc }})
+                        </h3>
+
+                        <svg class="roc" viewBox="0 0 120 120" role="img"
+                             aria-label="ROC curve">
+                            <rect x="10" y="10" width="100" height="100" class="roc-box"/>
+                            <line x1="10" y1="110" x2="110" y2="10" class="roc-diag"/>
+                            <polyline class="roc-line" points="{% for pt in model_info.roc %}{{ (10 + pt[0] * 100)|round(1) }},{{ (110 - pt[1] * 100)|round(1) }} {% endfor %}"/>
+                            <text x="60" y="119" class="roc-text" text-anchor="middle">False positive rate</text>
+                        </svg>
+
+                    </div>
+
+                </div>
+
+                <h3 class="ai-sub">Model comparison (test set)</h3>
+
+                <table class="cmp">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Accuracy</th>
+                            <th>F1</th>
+                            <th>ROC-AUC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in model_info.comparison %}
+                        <tr class="{{ 'selected' if m.selected else '' }}">
+                            <td>{{ m.name }}{% if m.selected %} &#10003;{% endif %}</td>
+                            <td>{{ (m.accuracy * 100)|round(1) }}%</td>
+                            <td>{{ (m.f1 * 100)|round(1) }}%</td>
+                            <td>{{ m.roc_auc }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <p class="ai-note">
+                    Trained {{ model_info.trained_at }}. The model is a
+                    statistical estimate; it can be wrong, especially on
+                    brand-new or compromised legitimate sites.
+                </p>
+
+                {% else %}
+
+                <p class="empty">
+                    {{ model_error or "Model metrics are not available." }}
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="panel">
+
+                <span class="panel-label">
+                    HOW IT WORKS
+                </span>
+
+                <h2>AI Pipeline</h2>
+
+                <div class="method">
+                    <div class="method-number">01</div>
+                    <div>
+                        <h3>Feature Extraction</h3>
+                        <p>
+                            {{ model_info.n_features if model_info else 46 }}
+                            numerical features are computed from the URL text:
+                            length, subdomains, IP hosts, suspicious TLDs,
+                            phishing keywords, brand impersonation, entropy and
+                            domain popularity.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <div class="method-number">02</div>
+                    <div>
+                        <h3>Classification</h3>
+                        <p>
+                            Logistic Regression, Random Forest and Gradient
+                            Boosting were trained and compared; the best
+                            performer on validation data is used.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <div class="method-number">03</div>
+                    <div>
+                        <h3>Explainability</h3>
+                        <p>
+                            Each feature is neutralised in turn to show which
+                            ones pushed the score towards phishing or towards
+                            legitimate.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <div class="method-number">04</div>
+                    <div>
+                        <h3>Hybrid Verdict</h3>
+                        <p>
+                            The AI probability is blended with the VirusTotal
+                            engine results. If VirusTotal is unavailable, the AI
+                            model still produces a verdict.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="method">
+                    <div class="method-number">05</div>
+                    <div>
+                        <h3>Feedback Loop</h3>
+                        <p>
+                            Labels you submit are stored and included the next
+                            time the model is re-trained.
+                        </p>
+                    </div>
+                </div>
+
+                {% if model_info %}
+
+                <h3 class="ai-sub">Most influential features (global)</h3>
+
+                {% set top = model_info.importances[0].importance %}
+
+                {% for imp in model_info.importances[:8] %}
+                <div class="factor">
+                    <div class="factor-top">
+                        <span>{{ imp.label }}</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-fill accent"
+                             style="width: {{ (imp.importance / top * 100)|round(0) }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+
+                <p class="ai-note">
+                    API: <code>POST /api/predict</code> with
+                    <code>{"url": "https://..."}</code> &middot;
+                    <code>GET /api/model-info</code>
+                </p>
+
+            </div>
+
+        </section>
+
+        <footer>
+
+            <div class="footer-logo">PG</div>
+
+            <strong>
+                PhishGuard Security Intelligence
+            </strong>
+
+            <p>
+                Powered by VirusTotal API.
+                No detection does not guarantee complete safety.
+            </p>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+
+function setURL(url) {
+    document.getElementById("url").value = url;
+    document.getElementById("url").focus();
+}
+
+function clearURL() {
+    document.getElementById("url").value = "";
+    document.getElementById("url").focus();
+}
+
+async function pasteURL() {
+    try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById("url").value = text;
+    } catch (error) {
+        alert("Clipboard permission is unavailable. Paste manually.");
+    }
+}
+
+async function copyURL() {
+
+    const url = document.getElementById("url").value;
+
+    if (!url) {
+        alert("Enter a URL first.");
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(url);
+        alert("URL copied successfully.");
+    } catch (error) {
+        alert("Unable to copy the URL.");
+    }
+}
+
+const scanForm = document.getElementById("scanForm");
+
+if (scanForm) {
+
+    scanForm.addEventListener("submit", function () {
+
+        const status =
+            document.getElementById("scanStatus");
+
+        const button =
+            document.querySelector(".scan-btn");
+
+        status.style.display = "block";
+        button.disabled = true;
+        button.textContent = "Scanning...";
+
+    });
+
+}
+
+const detectionBar =
+    document.getElementById("detectionBar");
+
+if (detectionBar) {
+
+    let rate =
+        parseFloat(detectionBar.dataset.rate);
+
+    if (!isNaN(rate)) {
+
+        rate =
+            Math.max(0, Math.min(100, rate));
+
+        detectionBar.style.width =
+            rate + "%";
+    }
+}
+
+function filterHistory() {
+
+    const query =
+        document
+        .getElementById("historySearch")
+        .value
+        .toLowerCase();
+
+    document
+        .querySelectorAll(".history-item")
+        .forEach(function (item) {
+
+            item.style.display =
+                item.dataset.url.includes(query)
+                ? "block"
+                : "none";
+
+        });
+}
+
+function toggleTheme() {
+
+    document.body.classList.toggle("light-theme");
+
+    const isLight =
+        document.body.classList.contains("light-theme");
+
+    localStorage.setItem(
+        "phishguard-theme",
+        isLight ? "light" : "dark"
+    );
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const savedTheme =
+        localStorage.getItem("phishguard-theme");
+
+    if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+    }
+
+});
+
+</script>
+
+<script>
+
+document.querySelectorAll(".ai-bar").forEach(function (bar) {
+
+    let rate = parseFloat(bar.dataset.rate);
+
+    if (!isNaN(rate)) {
+        bar.style.width = Math.max(0, Math.min(100, rate)) + "%";
+    }
+
+});
+
+async function sendFeedback(label) {
+
+    const box = document.getElementById("aiFeedback");
+    const msg = document.getElementById("feedbackMsg");
+
+    try {
+
+        const response = await fetch("/api/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                url: box.dataset.url,
+                label: label,
+                probability: parseFloat(box.dataset.prob)
+            })
+        });
+
+        msg.textContent = response.ok
+            ? "Thanks! Your label was saved for the next training run."
+            : "Could not save feedback.";
+
+    } catch (error) {
+        msg.textContent = "Could not save feedback.";
+    }
+}
+
+</script>
+
+</body>
+</html>
