@@ -22,6 +22,7 @@ A machine learning project that detects phishing URLs using a Gradient Boosting 
 ├── models/             
 ├── templates/          
 ├── static/             
+├── .env.example        
 ├── app.py              
 ├── requirements.txt    
 └── README.md           
@@ -31,6 +32,6 @@ A machine learning project that detects phishing URLs using a Gradient Boosting 
 
 1. Clone or download the repository and navigate to the folder.
 2. Set up a virtual environment and install dependencies via `pip install -r requirements.txt`.
-3. Create a `.env` file containing `VIRUSTOTAL_API_KEY=your_key_here`.
+3. Copy `.env.example` to `.env` and add your VirusTotal API key (get a free key from virustotal.com).
 4. Train the model with `python -m ml.train --download`.
 5. Run `python app.py` and open `http://127.0.0.1:5000` in your browser.
